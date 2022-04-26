@@ -1,0 +1,53 @@
+-------- GRAMATICA --------
+
+* Simbolo Inicial = { S }
+
+* Terminales = {
+adios, temporada, resultado, jornada, goles, tabla, partidos, top, equipo, vs, epsilon, total, local, superior, inferior, menorq, year guion, mayorq, letra_f, letra_j, letra_i, letra_n, number
+		}
+
+* No Terminales = {
+S, INICIO, RESERVADAS, VALIDACION, LISTAGOLES, LISTATOP, TEMPORADA, LISTAOPCIONAL, LISTAELEMENTOS, LISTAELEMENTOS', ATRIBUTO
+}
+
+* Producciones:
+
+	S ::= INICIO
+
+	INICIO ::=  adios | RESERVADAS VALIDACION temporada TEMPORADA LISTAOPCIONAL
+
+	RESERVADAS  ::=  resultado 
+					| jornada 
+					| goles 
+					| tabla 
+					| partidos 
+					| top
+					| adios 
+
+	VALIDACION  ::= 	  equipo vs equipo 
+					| number
+					| LISTAGOLES 
+					| epsilon 
+					| equipo 
+					| LISTATOP
+
+
+	LISTAGOLES ::= total | local | visitante
+
+	LISTATOP ::= superior | inferior
+
+	TEMPORADA  ::= menorq year guion year mayorq
+
+	LISTAOPCIONAL ::=   epsilon | LISTAELEMENTOS
+
+
+	LISTAELEMENTOS  ::= ATRIBUTO LISTAELEMENTOS'
+	LISTAELEMENTOS' ::= ATRIBUTO LISTAELEMENTOS'
+	LISTAELEMENTOS' ::= epsilon
+
+
+	ATRIBUTO ::=    guion letra_f name
+				| guion letra_jletra_i number
+				| guion letra_jletra_f number
+				| guion letra_n number
+

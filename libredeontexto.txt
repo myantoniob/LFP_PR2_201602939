@@ -1,0 +1,45 @@
+S ::= INICIO
+
+INICIO ::= GAMERESULTADO 
+            | GAMEJORNADA
+            | GAMEGOLES
+            | GAMETABLA
+            | GAMEPARTIDOS
+            | GAMETOP
+            | GAMEADIOS
+
+1) GAMERESULTADO ::= reserved_RESULTADO hypertext reserved_VS hypertext 
+        reserved_TEMPORADA  leftAngle numeric hyphen numeric rightAngle
+
+
+2) GAMEJORNADA ::= reserved_JORNADA numeric reserved_TEMPORADA leftAngle 
+        numeric hyphen numeric rightAngle LISTABANDERAS
+
+LISTABANDERAS ::= BANDERAUNICA LISTABANDERAS_ | £
+LISTABANDERAS_ ::= BANDERAUNICA LISTABANDERAS_  
+LISTABANDERAS_ ::= £
+
+BANDERAUNICA = hyphen BANDERA TIPO  
+
+BANDERA =  reserved_f | reserved_ji | reserved_jf | reserved_n
+TIPO = filename | numeric  
+
+3) GAMEGOLES ::= reserved_GOLES GOLESLIST hypertext reserved_TEMPORADA
+        leftAngle numeric hyphen numeric rightAngle
+
+- GOLESLIST ::= reserved_TOTAL | reserved_LOCAL | reserved_VISITANTE
+
+4) GAMETABLA ::= reserved_TABLA reserved_TEMPORADA leftAngle numeric hyphen 
+    numeric rightAngle LISTABANDERAS
+
+(#hyphen reserved_f filename)
+
+5) GAMEPARTIDOS ::= reserved_PARTIDOS hyphen reserved_TEMPORADA leftAngle 
+    numeric hyphen numeric rightAngle LISTABANDERAS
+
+6) GAMETOP ::= reserved_TOP TOPLIST reserved_TEMPORADA leftAngle numeric
+        hyphen numeric rightAngle LISTABANDERAS
+
+-TOPLIST ::= reserved_SUPERIOR | reserved_INFERIOR 
+
+7) GAMEADIOS = reserved_ADIOS
