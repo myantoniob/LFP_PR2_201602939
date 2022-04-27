@@ -15,9 +15,11 @@ PARTIDOS “Real Madrid” TEMPORADA <1999-2000> -f archivo -ji 1 -jf 18
 #lexico.analyzer(string)
 #lexico.imprimirTokens()
 
-a = 1
-b = 'a'
-c = 3
+lista_ = []
 
-lista_ = [f'{a}{b}', c]
-print(lista_)
+lista_.append(1)
+lista_.append(2)
+lista_.append(3)
+lista_.append(4)
+
+print(lista_.pop())

@@ -53,8 +53,8 @@ class Parser:
             self.addError('RESULTADO | JORNADA | GOLES | TABLA | PARTIDOS | TOP | ADIOS', temporal.type)  
             
     def GAMERESULTADO(self):
-        '''reserved_RESULTADO hypertext reserved_VS hypertext 
-        reserved_TEMPORADA  leftAngle numeric hyphen numeric rightAngle '''
+        '''1) GAMERESULTADO ::= reserved_RESULTADO hypertext reserved_VS hypertext 
+        reserved_TEMPORADA  TIMEFRAME'''
         team1 = ''
         team2 = ''
         date1 = 0
@@ -90,55 +90,14 @@ class Parser:
                             return
 
                         elif token.type == 'reserved_TEMPORADA':
-                            token = self.popToken()
 
-                            if token is None:
-                                self.addError('leftAngle', 'None')
+
+                            time_frame_list = self.TIMEFRAME()
+                            if time_frame_list is None:
                                 return
-                            elif token.type == 'leftAngle':
-                                token = self.popToken()
 
-                                if token is None:
-                                    self.addError('numeric', 'None')
-                                    return 
-                                elif token.type == 'numeric':
-                                    date1 = token.lexema
+                            game_resultado(team1, team2, time_frame_list)
 
-                                    token = self.popToken()
-
-                                    if token is None:
-                                        self.addError('hyphen', 'None')
-                                        return
-                                    elif token.type == 'hyphen':
-                                        token = self.popToken()
-
-                                        if token is None:
-                                            self.addError('numeric', 'None')
-                                            return
-                                        elif token.type == 'numeric':
-                                            date2 = token.lexema
-
-                                            token = self.popToken()
-                                            if token is None:
-                                                self.addError('rightAngle', 'None')
-                                                return
-                                            elif token.type == 'rightAngle':
-                                                # Final step
-                                                game_resultado(team1, team2, date1, date2)
-                                            else: 
-                                                self.addError('rightAngle', token.type)
-                                        else: 
-                                            self.addError('numeric', token.type)
-
-
-                                    else:
-                                        self.addError('hyphen', token.type)
-                                    
-                                else:
-                                    self.addError('numeric', token.type) 
-
-                            else:
-                                self.addError('leftAngle', token.type)  
                         else:
                             self.addError('reserved_TEMPORADA', token.type)
                     else:
@@ -158,9 +117,11 @@ class Parser:
 
 
     def GAMEJORNADA(self):
-        '''GAMEJORNADA ::= reserved_JORNADA numeric reserved_TEMPORADA leftAngle 
-        numeric hyphen numeric rightAngle LISTABANDERAS'''
-
+        '''2) GAMEJORNADA ::= reserved_JORNADA numeric reserved_TEMPORADA 
+            TIMEFRAME LISTABANDERAS '''
+        jornada = 0
+        date1 = 0
+        date2 = 0
         token = self.popToken()
         if token.type == 'reserved_JORNADA':
 
@@ -170,6 +131,141 @@ class Parser:
                 self.addError('numeric', 'None')
                 return
             elif token.type == 'numeric':
+                jornada = token.lexema
+
+                token = self.popToken()
+                if token is None:
+                    self.addError('reserved_TEMPORADA', 'None')
+                    return
+                elif token.type == 'reserved_TEMPORADA':
+                    
+                    time_frame_list = self.TIMEFRAME()
+                    if time_frame_list is None:
+                        return
+
+                    lista_banderas = self.LISTABANDERAS()
+                    if lista_banderas is None:
+                        return
+
+                    game_jornada(jornada, time_frame_list, lista_banderas)
+
+                else:
+                    self.addError('reserved_TEMPORADA', token.type)
+
+
+            else:
+                self.addError('numeric', token.type) 
+        else:
+            self.addError('reserved_JORNADA', token.type)
+
+
+
+    def GAMEGOLES(self):
+        '''3) GAMEGOLES ::= reserved_GOLES GOLESLIST hypertext 
+                reserved_TEMPORADA TIMEFRAME'''
+        team = ''
+        token = self.popToken()
+
+        if token.type == 'reserved_GOLES':
+
+            goles_type = self.GOLESLIST() 
+
+            if goles_type is None:
+                return
+            
+            token = self.popToken()
+            if token is None:
+                self.addError('hypertext', 'None')
+                return
+            elif token.type == 'hypertext':
+                team = token.lexema
+
+                token = self.popToken()
+                if token is None:
+                    self.addError('reserved_TEMPORADA', 'None')
+                    return
+                elif token.type == 'reserved_TEMPORADA':
+
+                    time_frame_list = self.TIMEFRAME()
+                    if time_frame_list is None:
+                        return
+
+                    game_goles(goles_type, team, time_frame_list)
+
+                else:
+                    self.addError('reserved_TEMPORADA', token.type)
+
+
+            else:
+                self.addError('hypertext', token.type) 
+
+                
+        else:
+            self.addError('reserved_GOLES', token.type)
+
+    def GOLESLIST(self):
+        token = self.popToken()
+
+        if token is None:
+            self.addError('reserved_TOTAL | reserved_LOCAL | reserved_VISITANTE','None')
+            return
+        
+        elif token.type == 'reserved_TOTAL':
+            return token.lexema
+        elif token.type == 'reserved_LOCAL':
+            return token.lexema
+        elif token.type == 'reserved_VISITANTE':
+            return token.lexema
+        else:
+            self.addError('reserved_TOTAL | reserved_LOCAL | reserved_VISITANTE', token.type)
+
+
+    def GAMETABLA(self):
+        '''4) GAMETABLA ::= reserved_TABLA reserved_TEMPORADA 
+        TIMEFRAME LISTABANDERAS'''
+
+        token = self.popToken()
+        if token.type == 'reserved_TABLA':
+            
+
+            token = self.popToken()
+            if token is None:
+                self.addError('reserved_TEMPORADA', 'None')
+                return
+            elif token.type == 'reserved_TEMPORADA':
+                
+
+                time_frame_list = self.TIMEFRAME()
+                if time_frame_list is None:
+                    return
+                lista_banderas = self.LISTABANDERAS()
+                if lista_banderas is None:
+                    return
+
+                game_tabla(time_frame_list, lista_banderas)
+            else:
+                self.addError('reserved_TEMPORADA', token.type)
+
+
+        else:
+            self.addError('reserved_TABLA', token.type) 
+
+
+
+
+    def GAMEPARTIDOS(self):
+        '''GAMEPARTIDOS ::= reserved_PARTIDOS hyphen reserved_TEMPORADA
+             TIMEFRAME LISTABANDERAS'''
+
+        token = self.popToken()
+
+        if token.type == 'reserved_PARTIDOS':
+            
+
+            token = self.popToken()
+            if token is None:
+                self.addError('hyphen', 'None')
+            elif token.type == 'hyphen':
                 
 
                 token = self.popToken()
@@ -179,98 +275,22 @@ class Parser:
                 elif token.type == 'reserved_TEMPORADA':
                     
 
-                    token = self.popToken()
-                    if token is None:
-                        self.addError('leftAngle', 'None')
+                    time_frame_list = self.TIMEFRAME()
+                    if time_frame_list is None:
                         return
-                    elif token.type == 'leftAngle':
-                        
-
-                        token = self.popToken()
-                        if token is None:
-                            self.addError('numeric', 'None')
-                            return
-                        elif token.type == 'numeric':
-                            
-
-                            token = self.popToken()
-                            if token is None:
-                                self.addError('hyphen', 'None')
-                                return
-                            elif token.type == 'hyphen':
-                                
-
-                                token = self.popToken()
-                                if token is None:
-                                    self.addError('numeric', 'None')
-                                    return
-                                elif token.type == 'numeric':
-                                    
-
-                                    token = self.popToken()
-                                    if token is None:
-                                        self.addError('rightAngle', 'None')
-                                        return
-                                    elif token.type == 'rightAngle':
-                                        
-
-                                        lista = self.LISTABANDERAS()
-
-                                        '''if lista is None:
-                                            return
-
-                                        if token is None:
-                                            self.addError('#', 'None')
-                                            return
-                                        elif token.type == '#':
-                                            pass
-                                        else:
-                                            self.addError('#', token.type)'''
-
-
-                                    else:
-                                        self.addError('#', token.type)
-
-
-                                else:
-                                    self.addError('#', token.type)
-
-
-                            else:
-                                self.addError('#', token.type)
-
-
-                        else:
-                            self.addError('#', token.type)
-
-
-                    else:
-                        self.addError('#', token.type)
+                        # 4D56S4D56F4S56D4FS56D4FS6D546FSD6
 
 
                 else:
-                    self.addError('#', token.type)
+                    self.addError('reserved_TEMPORADA', token.type)
 
 
             else:
-                self.addError('#', token.type) 
+                self.addError('hyphen', token.type)
+
+
         else:
-            self.addError('reserved_JORNADA', token.type)
-
-
-
-    def GAMEGOLES(self):
-        token = self.popToken()
-
-
-
-    def GAMETABLA(self):
-        token = self.popToken()
-
-
-
-    def GAMEPARTIDOS(self):
-        token = self.popToken()
+            self.addError('reserved_PARTIDOS', token.type) 
 
 
 
@@ -283,7 +303,56 @@ class Parser:
         token = self.popToken() 
 
 # <------------------------------------------------->
+    def TIMEFRAME(self):
+        token = self.popToken()
 
+        if token is None:
+            self.addError('leftAngle', 'None')
+            return
+        elif token.type == 'leftAngle':
+            token = self.popToken()
+
+            if token is None:
+                self.addError('numeric', 'None')
+                return 
+            elif token.type == 'numeric':
+                date1 = token.lexema
+
+                token = self.popToken()
+
+                if token is None:
+                    self.addError('hyphen', 'None')
+                    return
+                elif token.type == 'hyphen':
+                    token = self.popToken()
+
+                    if token is None:
+                        self.addError('numeric', 'None')
+                        return
+                    elif token.type == 'numeric':
+                        date2 = token.lexema
+
+                        token = self.popToken()
+                        if token is None:
+                            self.addError('rightAngle', 'None')
+                            return
+                        elif token.type == 'rightAngle':
+                            # Final step
+                            return [date1, date2]
+                        else: 
+                            self.addError('rightAngle', token.type)
+                    else: 
+                        self.addError('numeric', token.type)
+
+
+                else:
+                    self.addError('hyphen', token.type)
+                
+            else:
+                self.addError('numeric', token.type) 
+
+        else:
+            self.addError('leftAngle', token.type) 
 # <------------------------------------------------->
 
     def LISTABANDERAS(self):
