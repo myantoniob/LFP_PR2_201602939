@@ -51,64 +51,97 @@ class Parser:
             self.GAMEADIOS()
         else:
             self.addError('RESULTADO | JORNADA | GOLES | TABLA | PARTIDOS | TOP | ADIOS', temporal.type)  
-            
+    
+    def DOUBLEQUOTE(self):
+        token = self.popToken()
+        if token is None:
+            self.addError('doubleQuote', 'None')
+            return
+        elif token.type == 'doubleQuote':
+            return token.lexema
+        else:
+            self.addError('doubleQuote', token.type)
+
+
     def GAMERESULTADO(self):
         '''1) GAMERESULTADO ::= reserved_RESULTADO hypertext reserved_VS hypertext 
         reserved_TEMPORADA  TIMEFRAME'''
         team1 = ''
         team2 = ''
-        date1 = 0
-        date2 = 0
 
         token = self.popToken()
         if token.type == 'reserved_RESULTADO':
 
             token = self.popToken()
             if token is None:
-                self.addError('hypertext', 'None')
+                self.addError('doubleQuote', 'None')
                 return
+            elif token.type == 'doubleQuote':
 
-            elif token.tye == 'hypertext':
-                team1 = token.lexema
                 token = self.popToken()
-
                 if token is None:
-                    self.addError('reserved_VS', 'None')
+                    self.addError('hypertext', 'None')
                     return
-                elif token.type == 'reserved_VS':
+
+                elif token.type == 'hypertext':
+                    team1 = token.lexema
+
+                    quote = self.DOUBLEQUOTE()
+                    if quote is None:
+                        return
+
                     token = self.popToken()
 
                     if token is None:
-                        self.addError('hypertext', 'None')
+                        self.addError('reserved_VS', 'None')
                         return
-                    elif token.type == 'hypertext':
-                        team2 = token.lexema
+                    elif token.type == 'reserved_VS':
+
+                        quote = self.DOUBLEQUOTE()
+                        if quote is None:
+                            return
+
+
                         token = self.popToken()
 
                         if token is None:
-                            self.addError('reserved_TEMPORADA', 'None')
+                            self.addError('hypertext', 'None')
                             return
+                        elif token.type == 'hypertext':
+                            team2 = token.lexema
 
-                        elif token.type == 'reserved_TEMPORADA':
-
-
-                            time_frame_list = self.TIMEFRAME()
-                            if time_frame_list is None:
+                            quote = self.DOUBLEQUOTE()
+                            if quote is None:
                                 return
 
-                            game_resultado(team1, team2, time_frame_list)
 
+                            token = self.popToken()
+
+                            if token is None:
+                                self.addError('reserved_TEMPORADA', 'None')
+                                return
+
+                            elif token.type == 'reserved_TEMPORADA':
+
+
+                                time_frame_list = self.TIMEFRAME()
+                                if time_frame_list is None:
+                                    return
+
+                                game_resultado(team1, team2, time_frame_list)
+
+                            else:
+                                self.addError('reserved_TEMPORADA', token.type)
                         else:
-                            self.addError('reserved_TEMPORADA', token.type)
+                            self.addError('hypertext', token.type)
+
                     else:
-                        self.addError('hypertext', token.type)
+                        self.addError('reserved_VS', token.type)
 
                 else:
-                    self.addError('reserved_VS', token.type)
-
+                    self.addError('hypertext', token.type)
             else:
-                self.addError('hypertext', token.type)
-
+                self.addError('doubleQuote', token.type)
 
         else: 
             self.addError('reserved_RESULTADO', token.type)
@@ -173,12 +206,20 @@ class Parser:
             if goles_type is None:
                 return
             
+            quote = self.DOUBLEQUOTE()
+            if quote is None:
+                return
+
             token = self.popToken()
             if token is None:
                 self.addError('hypertext', 'None')
                 return
             elif token.type == 'hypertext':
                 team = token.lexema
+
+                quote = self.DOUBLEQUOTE()
+                if quote is None:
+                    return
 
                 token = self.popToken()
                 if token is None:
@@ -254,19 +295,27 @@ class Parser:
 
 
     def GAMEPARTIDOS(self):
-        '''GAMEPARTIDOS ::= reserved_PARTIDOS hyphen reserved_TEMPORADA
-             TIMEFRAME LISTABANDERAS'''
+        '''5) GAMEPARTIDOS ::= reserved_PARTIDOS DOUBLEQUOTE hypertext DOUBLEQUOTE 
+        reserved_TEMPORADA TIMEFRAME LISTABANDERAS'''
 
+        team = ''
         token = self.popToken()
 
         if token.type == 'reserved_PARTIDOS':
             
+            quote = self.DOUBLEQUOTE()
+            if quote is None:
+                return
 
             token = self.popToken()
             if token is None:
-                self.addError('hyphen', 'None')
-            elif token.type == 'hyphen':
-                
+                self.addError('hypertext', 'None')
+            elif token.type == 'hypertext':
+                team = token.lexema
+
+                quote = self.DOUBLEQUOTE()
+                if quote is None:
+                    return    
 
                 token = self.popToken()
                 if token is None:
@@ -278,15 +327,19 @@ class Parser:
                     time_frame_list = self.TIMEFRAME()
                     if time_frame_list is None:
                         return
-                        # 4D56S4D56F4S56D4FS56D4FS6D546FSD6
+                    
+                    lista_banderas = self.LISTABANDERAS()
+                    if lista_banderas is None:
+                        return
 
+                    game_partidos(team, time_frame_list, lista_banderas)
 
                 else:
                     self.addError('reserved_TEMPORADA', token.type)
 
 
             else:
-                self.addError('hyphen', token.type)
+                self.addError('hypertext', token.type)
 
 
         else:
@@ -295,12 +348,49 @@ class Parser:
 
 
     def GAMETOP(self):
+        '''6) GAMETOP ::= reserved_TOP TOPLIST reserved_TEMPORADA 
+                TIMEFRAME LISTABANDERAS'''
+
         token = self.popToken()
+        if token.type == 'reserved_TOP':
+
+            top_list = self.TOPLIST()
+            if top_list is None:
+                return
+
+            token = self.popToken()
+            if token is None:
+                self.addError('reserved_TEMPORADA', 'None')
+                return
+            elif token.type == 'reserved_TEMPORADA':
+                
+                time_frame = self.TIMEFRAME()
+                if time_frame is None:
+                    return
+                
+                lista_banderas = self.LISTABANDERAS()
+                if lista_banderas is None:
+                    return
+
+                game_top(top_list, time_frame, lista_banderas)
+
+            else:
+                self.addError('reserved_TEMPORADA', token.type) 
+            
+        else:
+            self.addError('reserved_TOP', token.type)
 
 
 
     def GAMEADIOS(self):
-        token = self.popToken() 
+        '''7) GAMEADIOS = reserved_ADIOS'''
+
+        token = self.popToken()
+
+        if token.type == 'reserved_ADIOS':
+            game_adios(token.lexema)
+        else:
+            self.addError('reserved_ADIOS', token.type)  
 
 # <------------------------------------------------->
     def TIMEFRAME(self):
@@ -420,3 +510,17 @@ class Parser:
             return int(token.lexema)
         else:
             self.addError('filename | numeric', token.type)
+
+    def TOPLIST(self):
+        token = self.popToken()
+
+        if token is None:
+            self.addError('reserved_SUPERIOR | reserved_INFERIOR', 'None')
+            return
+
+        if token.type == 'reserved_SUPERIOR':
+            return token.lexema
+        elif token.type == 'reserved_INFERIOR':
+            return token.lexema
+        else:
+            self.addError('reserved_SUPERIOR | reserved_INFERIOR', token.type)

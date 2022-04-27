@@ -11,8 +11,8 @@ INICIO ::= GAMERESULTADO
 TIMEFRAME :: = leftAngle numeric hyphen numeric rightAngle
 
 
-1) GAMERESULTADO ::= reserved_RESULTADO hypertext reserved_VS hypertext 
-        reserved_TEMPORADA  TIMEFRAME
+1) GAMERESULTADO ::= reserved_RESULTADO doubleQuote hypertext doubleQuote reserved_VS doubleQuote hypertext 
+        doubleQuote reserved_TEMPORADA  TIMEFRAME
 
 
 2) GAMEJORNADA ::= reserved_JORNADA numeric reserved_TEMPORADA TIMEFRAME LISTABANDERAS
