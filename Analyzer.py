@@ -34,8 +34,9 @@ class LexicalAnalyzer:
             self.state = 2
             self.buffer += character
             self.column += 1
-        # This is STATE 3, file name
 
+        # This is STATE 3, file name
+        
 
         # This is STATE 4, numbers
         elif character.isnumeric():
