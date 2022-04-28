@@ -35,7 +35,7 @@ TIPO = filename | numeric
 
 (#hyphen reserved_f filename)
 
-5) GAMEPARTIDOS ::= reserved_PARTIDOS hyphen reserved_TEMPORADA TIMEFRAME LISTABANDERAS
+5) GAMEPARTIDOS ::= reserved_PARTIDOS hypertext reserved_TEMPORADA TIMEFRAME LISTABANDERAS
 
 6) GAMETOP ::= reserved_TOP TOPLIST reserved_TEMPORADA TIMEFRAME LISTABANDERAS
 

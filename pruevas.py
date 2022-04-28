@@ -3,7 +3,7 @@ from Parser import Parser
 
 
 string = '''
-GOLES LOCAL "Valencia" TEMPORADA <1998-1999> 
+TABLA TEMPORADA <2018-2019>
 '''
 
 # 1) RESULTADO "Real Madrid" VS "Villarreal" TEMPORADA <2019-2020>
@@ -22,10 +22,11 @@ GOLES LOCAL "Valencia" TEMPORADA <1998-1999>
 # 5.1) PARTIDOS "Español" TEMPORADA <1999-2000> -f reporteEspanol
 # 5.2) PARTIDOS "Real Madrid" TEMPORADA <1999-2000>  -jf 18 -f reporteEspanol
 
+# 6) TOP SUPERIOR TEMPORADA <2000-2001>
+# 6.1)  TOP INFERIOR TEMPORADA <1999-2000> -n 3
 
-# RESULTADO "Levante" VS "Español" TEMPORADA <2017-2018>
-# JORNADA 12 TEMPORADA <2019-2020>
-# PARTIDOS "Real Madrid" TEMPORADA <1999-2000> -ji 1 -jf 18
+# 7) ADIOS
+
 
 lexico = LexicalAnalyzer()
 lexico.analyzer(string)
