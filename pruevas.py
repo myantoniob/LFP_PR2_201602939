@@ -3,7 +3,7 @@ from Parser import Parser
 
 
 string = '''
-TABLA TEMPORADA <2018-2019>
+PARTIDOS "Real Madrid" TEMPORADA <1999-2000> -ji 1 -jf 18 -f reporteEspanol1
 '''
 
 # 1) RESULTADO "Real Madrid" VS "Villarreal" TEMPORADA <2019-2020>

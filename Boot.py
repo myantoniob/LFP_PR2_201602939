@@ -9,6 +9,15 @@ Fecha,          Temporada,  Jornada,    Equipo1,      Equipo2,    Goles1,   Gole
 08/09/1979,     1979-1980,  1,          Betis,Rayo    Vallecano,     1,         2
 '''
 
+class Equipo:
+    def __init__(self, name, lost_game, won_game, draw_game, points) -> None:
+        self.name = name 
+        self.lost_game = lost_game
+        self.won_game = won_game
+        self.draw_game = draw_game
+        self.points = points 
+
+
 # --> 1
 def game_resultado(team1, team2, time_frame_list):
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
@@ -110,7 +119,7 @@ def game_tabla(time_frame_list, lista_banderas):
                 elif int(row_t[5]) == int(row_t[6]):
                     draw_game += 1
                     points += 1
-                    
+
         # Equipo          p_perdidos  p_draw p_ganados puntos
         dic_teams[team] = [lost_game, draw_game, won_game, points]
         lost_game = 0
@@ -118,8 +127,24 @@ def game_tabla(time_frame_list, lista_banderas):
         draw_game = 0
         points = 0
     
+    # Sort list
+    sort_list = []
+
     for key in dic_teams:
-        print(key, dic_teams[key])
+        team = Equipo(key,dic_teams[key][0], dic_teams[key][1], dic_teams[key][2], dic_teams[key][3])
+        sort_list.append(team)
+   
+
+    for i in range(len(sort_list)):
+        for j in range(len(sort_list)-i -1 ):
+            if sort_list[j].points < sort_list[j+1].points:
+               temp = sort_list[j+1]
+               sort_list[j+1] = sort_list[j]
+               sort_list[j] = temp 
+    
+
+    respuesta = f'Generando archivo de clasificacion de temporada {date}'
+    print(respuesta)
 
 
 '''
@@ -129,7 +154,17 @@ Fecha,          Temporada,  Jornada,    Equipo1,      Equipo2,    Goles1,   Gole
 '''
 #--> 5
 def game_partidos(team, time_frame_list, lista_banderas):
-    print('5-->',team, time_frame_list, lista_banderas) 
+    date = f'{time_frame_list[0]}-{time_frame_list[1]}'
+
+    for item in lista_banderas:
+        print(lista_banderas)
+
+    respuesta = ''
+
+    for row in reader:
+        if row[1] == date:
+            if row[3] == team or row[4] == team:
+                pass   
 
 # --> 6
 def game_top(top_list, time_frame, lista_banderas):
