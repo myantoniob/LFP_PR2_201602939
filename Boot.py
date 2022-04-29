@@ -1,4 +1,7 @@
 import csv
+from reportes import reportes
+
+reportes_ = reportes()
 
 def carga_datos():
     file = open('laligabot.csv', 'r', encoding='utf-8')
@@ -51,6 +54,7 @@ def game_jornada(jornada, time_frame_list, lista_banderas):
     
     respuesta = f'Generando archivo de resultados jornada {jornada} temporada {date}'
     #print(respuesta)
+    reportes_.reporte_jornada(lista, file_name)
     return respuesta
     
 
@@ -91,6 +95,10 @@ def game_goles(goles_type, team, time_frame_list):
 def game_tabla(time_frame_list, lista_banderas):
     reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
+    file_name = 'temporada'
+
+    if len(lista_banderas) != 0:
+        file_name = lista_banderas[1]
 
     # all the season
     temporada = []
@@ -161,6 +169,7 @@ def game_tabla(time_frame_list, lista_banderas):
     
 
     respuesta = f'Generando archivo de clasificacion de temporada {date}'
+    reportes_.reporte_tabla(sort_list, file_name)
     return respuesta
     #for row in sort_list:
         
