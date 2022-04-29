@@ -14,7 +14,7 @@ from Parser import Parser
 # 4) TABLA TEMPORADA <2018-2019>
 # 4.1) TABLA TEMPORADA <1996-1997> -f reporteGlobal1
 
-# 5) PARTIDOS "Real Madrid" TEMPORADA <1999-2000> -ji 1 -jf 18
+# 5) PARTIDOS "Real Madrid" TEMPORADA <1999-2000> -ji 5 -jf 18
 # 5.1) PARTIDOS "Español" TEMPORADA <1999-2000> -f reporteEspanol
 # 5.2) PARTIDOS "Real Madrid" TEMPORADA <1999-2000>  -jf 18 -f reporteEspanol
 

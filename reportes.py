@@ -61,8 +61,68 @@ class reportes():
         self.generar_reporte(completo, file_nam)
 
     def reporte_tabla(self, sort_list, file_name):
-        for li in sort_list:
-            print(li.name) 
+        # lost_game, draw_game, won_game, points
+        mid_file = f'''
+        <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Lost Games</th>
+            <th scope="col">Draw Games</th>
+            <th scope="col">Won Games</th>
+            <th scope="col">Points</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          ''' 
+
+        cont= 0
+        for item in sort_list:
+            mid_file += f'<tr> \n <th scope="row">{cont + 1}</th> \n'
+            mid_file += f'<td>{item.name}</td> \n'
+            mid_file += f'<td>{item.lost_game}</td> \n'
+            mid_file += f'<td>{item.draw_game}</td> \n'
+            mid_file += f'<td>{item.won_game}</td> \n'
+            mid_file += f'<td>{item.points}</td> \n'
+
+            cont += 1
+
+        completo = self.head_file + mid_file + self.footer_file
+
+
+        self.generar_reporte(completo, file_name)     
+
+
+
+    def generar_partidos(self, sorted_jornada, file_name):
+        mid_file = f'''
+        <th scope="col">#</th>
+            <th scope="col">Temporada</th>
+            <th scope="col">Jornada</th>
+            <th scope="col">Equipo 1</th>
+            <th scope="col">Equipo 2</th>
+            <th scope="col">Goles 1</th>
+            <th scope="col">Goles 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          '''  
+
+        cont= 0
+        for item in sorted_jornada:
+            mid_file += f'<tr> \n <th scope="row">{cont + 1}</th> \n'
+            mid_file += f'<td>{item[1]}</td> \n'
+            mid_file += f'<td>{item[2]}</td> \n'
+            mid_file += f'<td>{item[3]}</td> \n'
+            mid_file += f'<td>{item[4]}</td> \n'
+            mid_file += f'<td>{item[5]}</td> \n'
+            mid_file += f'<td>{item[6]}</td> \n </tr> \n'
+
+            cont += 1
+
+        completo = self.head_file + mid_file + self.footer_file
+
+        self.generar_reporte(completo, file_name)
+
 
     def generar_reporte(self, mensaje, file_nam):
         file = open(f'{file_nam}.html', 'w+')

@@ -210,6 +210,7 @@ def game_partidos(team, time_frame_list, lista_banderas):
             sorted_jornada.append(jornada_completa[i])
     
     respuesta = f'Generando archivo de resultados de temporada {date} del {team}'
+    reportes_.generar_partidos(sorted_jornada, f)
     return respuesta
 
 
