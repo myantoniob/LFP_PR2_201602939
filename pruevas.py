@@ -3,7 +3,7 @@ from Parser import Parser
 
 
 string = '''
-PARTIDOS "Real Madrid" TEMPORADA <1999-2000> -ji 1 -jf 18 -f reporteEspanol1
+TABLA TEMPORADA <2018-2019>
 '''
 
 # 1) RESULTADO "Real Madrid" VS "Villarreal" TEMPORADA <2019-2020>
@@ -23,7 +23,7 @@ PARTIDOS "Real Madrid" TEMPORADA <1999-2000> -ji 1 -jf 18 -f reporteEspanol1
 # 5.2) PARTIDOS "Real Madrid" TEMPORADA <1999-2000>  -jf 18 -f reporteEspanol
 
 # 6) TOP SUPERIOR TEMPORADA <2000-2001>
-# 6.1)  TOP INFERIOR TEMPORADA <1999-2000> -n 3
+# 6.1)  TOP INFERIOR TEMPORADA <1999-2000> -n 10
 
 # 7) ADIOS
 

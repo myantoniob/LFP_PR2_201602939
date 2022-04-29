@@ -450,7 +450,8 @@ class Parser:
         bandera_unica = self.BANDERAUNICA()
 
         lista_banderas_ = self.LISTABANDERAS_()
-        return [bandera_unica] + [lista_banderas_]
+        #return [bandera_unica] + [lista_banderas_]
+        return bandera_unica + lista_banderas_
 
     def LISTABANDERAS_(self):
         token = self.scanToken()
@@ -460,7 +461,8 @@ class Parser:
         elif token.type == 'hyphen':
             bandera_unica = self.BANDERAUNICA()
             lista_banderas_ = self.LISTABANDERAS_()
-            return [bandera_unica] + [lista_banderas_]
+            #return [bandera_unica] + [lista_banderas_]
+            return bandera_unica + lista_banderas_
         else: 
             return []
 
