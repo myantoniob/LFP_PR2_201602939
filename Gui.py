@@ -1,6 +1,6 @@
 from tkinter import *
 
-from setuptools import Command
+from pruevas import request_element
 
 # Marco
 root = Tk()
@@ -38,10 +38,13 @@ request.place(x=10, y=465)
 
 # load_chat
 mensaje = []
-mensaje = ['"Bienvenido a La Liga Bot. Ingrese un comando "\n']
+mensaje = ['-->* "Bienvenido a La Liga Bot. Ingrese un comando "\n _______________________________________\n \n']
 def load_chat():
     text.delete('1.0', END)
-    mensaje.append(f'"{request.get()} "\n')
+    mensaje.append(f'-->* "{request.get()} "\n _______________________________________ \n \n')
+    r_s = request_element(request.get())
+    mensaje.append(f' \t {r_s} \n               _______________________________________ \n \n')
+    
     for men in mensaje:
         text.insert(END, men) 
 

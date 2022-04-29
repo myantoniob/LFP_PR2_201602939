@@ -1,10 +1,6 @@
+
 from Analyzer import LexicalAnalyzer
 from Parser import Parser
-
-
-string = '''
-TABLA TEMPORADA <2018-2019>
-'''
 
 # 1) RESULTADO "Real Madrid" VS "Villarreal" TEMPORADA <2019-2020>
 
@@ -28,13 +24,17 @@ TABLA TEMPORADA <2018-2019>
 # 7) ADIOS
 
 
-lexico = LexicalAnalyzer()
-lexico.analyzer(string)
-lexico.imprimirTokens()
+def request_element(string):
+    #string = '''GOLES LOCAL "Valencia" TEMPORADA <1998-1999>'''
 
+    lexico = LexicalAnalyzer()
+    lexico.analyzer(string)
+    #lexico.imprimirTokens()
 
-sintactico = Parser(lexico.tokenList)
-sintactico.analyze()
+    sintactico = Parser(lexico.tokenList)
+    respuesta = sintactico.analyze()
+    return respuesta
+    #print(respuesta)
 
 
 

@@ -1,7 +1,9 @@
 import csv
 
-file = open('laligabot.csv', 'r')
-reader = csv.reader(file)
+def carga_datos():
+    file = open('laligabot.csv', 'r', encoding='utf-8')
+    #reader = 
+    return csv.reader(file)
 
 '''
 #0                #1          #2           #3           #4          #5        #6
@@ -20,18 +22,27 @@ class Equipo:
 
 # --> 1
 def game_resultado(team1, team2, time_frame_list):
+    reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
     respuesta = ''
     for row in reader:
         if row[1] == date and row[3] == team1 and row[4] == team2:
             respuesta = f'El resultado de este partido fue: {team1} {row[5]} - {team2} {row[6]}' 
 
-    print(respuesta)
+    #print(respuesta)        
+    return respuesta
+    
 
 
 # --> 2
-def game_jornada(jornada, time_frame_list, lista):
+def game_jornada(jornada, time_frame_list, lista_banderas):
+    reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
+    #file name
+    file_name = 'jornada'
+    if len(lista_banderas) != 0:
+        file_name = lista_banderas[1]
+    
     respuesta = ''
     lista = [] # Save it on the file
     for row in reader:
@@ -39,11 +50,13 @@ def game_jornada(jornada, time_frame_list, lista):
             lista.append(row)
     
     respuesta = f'Generando archivo de resultados jornada {jornada} temporada {date}'
-    print(respuesta)
+    #print(respuesta)
+    return respuesta
     
 
 # --> 3
 def game_goles(goles_type, team, time_frame_list):
+    reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
     goles = 0
     respuesta = ''
@@ -68,15 +81,15 @@ def game_goles(goles_type, team, time_frame_list):
                 goles += int(row[5])
             elif row[1] == date and row[4] == team:
                 goles += int(row[6])
-
-
         respuesta = f'Los goles anotados por el {team} en {goles_type} en la temporada {date} fueron {goles}'
     
-    print(respuesta)
+    #print(respuesta)
+    return respuesta
 
 
 # --> 4
 def game_tabla(time_frame_list, lista_banderas):
+    reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
 
     # all the season
@@ -148,12 +161,13 @@ def game_tabla(time_frame_list, lista_banderas):
     
 
     respuesta = f'Generando archivo de clasificacion de temporada {date}'
-    print(respuesta)
-    for row in sort_list:
-        print(row.name, '  ', row.points)
+    return respuesta
+    #for row in sort_list:
+        
 
 #--> 5
 def game_partidos(team, time_frame_list, lista_banderas):
+    reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
 
     ji = 1
@@ -187,7 +201,7 @@ def game_partidos(team, time_frame_list, lista_banderas):
             sorted_jornada.append(jornada_completa[i])
     
     respuesta = f'Generando archivo de resultados de temporada {date} del {team}'
-    print(respuesta)
+    return respuesta
 
 
 '''
@@ -198,18 +212,24 @@ Fecha,          Temporada,  Jornada,    Equipo1,      Equipo2,    Goles1,   Gole
 
 # --> 6
 def game_top(top_list, time_frame_list, lista_banderas):
+    reader = carga_datos()
     date = f'{time_frame_list[0]}-{time_frame_list[1]}'
     
     # all the season
     temporada = []
 
+        
+
     for row in reader:
+        
         if row[1] == date:
             temporada.append(row)
     
+    print(len(temporada))
     # Each team
     dic_teams = {}
 
+    
     for row in temporada:
         dic_teams[row[3]] = row[1]
 
@@ -220,6 +240,7 @@ def game_top(top_list, time_frame_list, lista_banderas):
     draw_game = 0
     points = 0
 
+    
     for team in dic_teams:
         for row_t in temporada:
             #local
@@ -255,10 +276,13 @@ def game_top(top_list, time_frame_list, lista_banderas):
     # Sort list
     sort_list = []
 
+    
+
     for key in dic_teams:
         team = Equipo(key,dic_teams[key][0], dic_teams[key][1], dic_teams[key][2], dic_teams[key][3])
         sort_list.append(team)
    
+    
 
     for i in range(len(sort_list)):
         for j in range(len(sort_list)-i -1 ):
@@ -272,9 +296,11 @@ def game_top(top_list, time_frame_list, lista_banderas):
     if len(lista_banderas) != 0:
         if lista_banderas[0] == '-n':
             n = lista_banderas[1]
+    
 
     if top_list == 'SUPERIOR':
         for it in range(n):
+            
             lista_s_i.append(sort_list[it])
 
 
@@ -282,19 +308,24 @@ def game_top(top_list, time_frame_list, lista_banderas):
         for it in range(len(sort_list)-n, len(sort_list)):
             lista_s_i.append(sort_list[it])  
 
-    respuesta = f'El top {top_list} de la temporada {date} fue: \n'
+    respuesta = f'El top {top_list} de la temporada {date} fue: \n \n'
     cont = 0
     for row in lista_s_i:
-        respuesta += f'{cont+1}. {row.name} pts: {row.points}\n'
+        f_format = ''
+        for i in range(27-len(row.name)):
+            f_format += ' '
+
+        respuesta += f'{cont+1}. {row.name}{f_format} pts: {row.points}\n'
         cont += 1
 
     
-    print(respuesta)
+    return respuesta
 
 # --> 7
 def game_adios(adios):
+    reader = carga_datos()
     respuesta = ''
     if adios == 'ADIOS':
         respuesta = adios
 
-    print(respuesta)
+    return respuesta

@@ -24,10 +24,10 @@ class Parser:
             return None
 
     def analyze(self):
-        self.S()
+        return self.S()
     
     def S(self):
-        self.INICIO()
+        return self.INICIO()
 
     def INICIO(self):
 
@@ -36,19 +36,19 @@ class Parser:
         if temporal is None:
             self.addError('RESULTADO | JORNADA | GOLES | TABLA | PARTIDOS | TOP | ADIOS', 'None')
         elif temporal.type == 'reserved_RESULTADO':
-            self.GAMERESULTADO() 
+            return self.GAMERESULTADO() 
         elif temporal.type == 'reserved_JORNADA':
-            self.GAMEJORNADA()
+            return self.GAMEJORNADA()
         elif temporal.type == 'reserved_GOLES':
-            self.GAMEGOLES()
+            return self.GAMEGOLES()
         elif temporal.type == 'reserved_TABLA':
-            self.GAMETABLA()
+            return self.GAMETABLA()
         elif temporal.type == 'reserved_PARTIDOS':
-            self.GAMEPARTIDOS()
+            return self.GAMEPARTIDOS()
         elif temporal.type == 'reserved_TOP':
-            self.GAMETOP()   
+            return self.GAMETOP()   
         elif temporal.type == 'reserved_ADIOS':
-            self.GAMEADIOS()
+            return self.GAMEADIOS()
         else:
             self.addError('RESULTADO | JORNADA | GOLES | TABLA | PARTIDOS | TOP | ADIOS', temporal.type)  
     
@@ -127,8 +127,8 @@ class Parser:
                                 time_frame_list = self.TIMEFRAME()
                                 if time_frame_list is None:
                                     return
-
-                                game_resultado(team1, team2, time_frame_list)
+                                # Reotoran un mensaje str
+                                return game_resultado(team1, team2, time_frame_list)
 
                             else:
                                 self.addError('reserved_TEMPORADA', token.type)
@@ -180,7 +180,7 @@ class Parser:
                     if lista_banderas is None:
                         return
 
-                    game_jornada(jornada, time_frame_list, lista_banderas)
+                    return game_jornada(jornada, time_frame_list, lista_banderas)
 
                 else:
                     self.addError('reserved_TEMPORADA', token.type)
@@ -231,7 +231,7 @@ class Parser:
                     if time_frame_list is None:
                         return
 
-                    game_goles(goles_type, team, time_frame_list)
+                    return game_goles(goles_type, team, time_frame_list)
 
                 else:
                     self.addError('reserved_TEMPORADA', token.type)
@@ -283,7 +283,7 @@ class Parser:
                 if lista_banderas is None:
                     return
 
-                game_tabla(time_frame_list, lista_banderas)
+                return game_tabla(time_frame_list, lista_banderas)
             else:
                 self.addError('reserved_TEMPORADA', token.type)
 
@@ -332,7 +332,7 @@ class Parser:
                     if lista_banderas is None:
                         return
 
-                    game_partidos(team, time_frame_list, lista_banderas)
+                    return game_partidos(team, time_frame_list, lista_banderas)
 
                 else:
                     self.addError('reserved_TEMPORADA', token.type)
@@ -372,7 +372,7 @@ class Parser:
                 if lista_banderas is None:
                     return
 
-                game_top(top_list, time_frame, lista_banderas)
+                return game_top(top_list, time_frame, lista_banderas)
 
             else:
                 self.addError('reserved_TEMPORADA', token.type) 
@@ -388,7 +388,7 @@ class Parser:
         token = self.popToken()
 
         if token.type == 'reserved_ADIOS':
-            game_adios(token.lexema)
+            return game_adios(token.lexema)
         else:
             self.addError('reserved_ADIOS', token.type)  
 
