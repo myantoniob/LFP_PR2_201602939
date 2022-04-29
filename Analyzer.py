@@ -238,3 +238,12 @@ class LexicalAnalyzer:
             x.add_row([token.lexema, token.row, token.column, token.type])
         print(x)
 
+    def imprimirErrores(self):
+        '''Imprimir una tabla con los tokens'''
+        x = PrettyTable()
+        x.field_names = ["Description", "linea", "columna"]
+        for token in self.errorList:
+            x.add_row([token.description, token.row, token.column])
+        print(x)
+
+

@@ -29,12 +29,12 @@ def request_element(string):
 
     lexico = LexicalAnalyzer()
     lexico.analyzer(string)
-    #lexico.imprimirTokens()
-
+    lexico.imprimirTokens()
+    lexico.imprimirErrores()
+    
     sintactico = Parser(lexico.tokenList)
     respuesta = sintactico.analyze()
     return respuesta
     #print(respuesta)
-
 
 
